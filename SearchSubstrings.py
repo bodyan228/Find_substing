@@ -1,4 +1,5 @@
 import time
+import Last_Occurrence
 
 
 class search_substrings:
@@ -8,6 +9,7 @@ class search_substrings:
         len_string = len(string)
         len_substring = len(substring)
         hash_substring = hash(substring)
+        count = 0
 
         for pos in range(len_string - len_substring + 1):
             hs = hash(string[pos: pos + len_substring])
@@ -15,27 +17,28 @@ class search_substrings:
             if hs == hash_substring:
 
                 if string[pos:pos + len_substring] == substring:
-                    end = time.time()
-                    print("Время работы алгоритма Раббина-Карпа :{}".format(
-                        end - start))
-                    return pos
+                    count += 1
+                    # end = time.time()
+                    # print("Время работы алгоритма Раббина-Карпа :{}".format(
+                    #     end - start))
+                    # return pos
 
         end = time.time()
-        print("Время работы алгоритма Раббина-Карпа :{}".format(end-start))
-        return -1
+        print("Время работы алгоритма Раббина-Карпа: {}."
+              "Количество вхождений: {}.".format(end - start, count))
 
     def BruthForce(self, string, substring):#Поиск "грубой силой"
         start = time.time()
         flag = 0
         i = 0
+        count = 0
 
         for pos in range(len(string)):
 
             if i == len(substring):
-                end = time.time()
-                print("Время работы алгоритма поиска 'грубой силой': {}".
-                    format(end - start))
-                return pos - i
+                i = 0
+                count += 1
+                # return pos - i
 
             if string[pos] == substring[i]:
                 flag = 1
@@ -44,11 +47,13 @@ class search_substrings:
             else:
                 i = 0
 
-        if flag == 1:
-            end = time.time()
-            print("Время работы алгоритма поиска 'грубой силой': {}".
-                format(end - start))
-            return -1
+        # if flag == 1:
+        #     end = time.time()
+        #     print("Время работы алгоритма поиска 'грубой силой': {}".
+        #         format(end - start))
+        end = time.time()
+        print("Время работы алгоритма поиска 'грубой силой': {}."
+              "Количество вхождений: {}.".format(end - start, count))
 
     def find_prefix(self, substring):#Нахождение префикса для алгоритма Кнута-Морриса-Пратта
         p = [0]*len(substring)
@@ -75,6 +80,8 @@ class search_substrings:
         k = 0
         l = 0
         P = self.find_prefix(substring)
+        count = 0
+        # first_ind = 0
 
         while k < len(string):
             if substring[l] == string[k]:
@@ -82,73 +89,57 @@ class search_substrings:
                 l += 1
 
                 if l == len(substring):
-                    end = time.time()
-                    print("Время работы алгоритма Кнутта-Морриса-Пратта: {}".
-                        format(end - start))
-                    return k - len(substring)
+                    count += 1
+                    l = 0
+                    # end = time.time()
+                    # print("Время работы алгоритма Кнутта-Морриса-Пратта: {}".
+                    #     format(end - start))
+                    # first_ind = k - len(substring)
             elif l > 0:
                 l = P[l-1]
             else:
                 k += 1
         end = time.time()
-        print("Время работы алгоритма Кнутта-Морриса-Пратта:{}".
-            format(end - start))
+        print("Время работы алгоритма Кнутта-Морриса-Пратта:{}. "
+              "Количество вхождений: {}".format(end - start, count))
         return -1
 
     def BMH(self, string, substring):# Алогритм Бойера-Мура-Хорспула
+        occurrence = Last_Occurrence
         start = time.time()
-        unique_symbols = set()
+        alphabet = set(string)
+        count = 0
+        last = occurrence.last_occurrence(substring, alphabet)
         m = len(substring)
-        dict_offset = {}
-
-        for i in range(m-2, -1, -1):
-            if substring[i] not in unique_symbols:
-                dict_offset[substring[i]] = m - i - 1
-                unique_symbols.add(substring[i])
-
-        if substring[m-1] not in unique_symbols:
-            dict_offset[substring[m-1]] = m
-        dict_offset['*'] = m
-
         n = len(string)
-
-        if n >= m:
-            i = m - 1
-
-            while i < n:
-                k = 0
-                for j in range(m-1, -1, -1):
-
-                    if string[i-k] != substring[j]:
-
-                        if j == m-1:
-
-                            offset = dict_offset[string[i]] \
-                                if dict_offset.get(string[i], False) \
-                                else dict_offset['*']
-
-                        else:
-                            offset = dict_offset[substring[j]]
-                        i += offset
-                        break
-
-                    k += 1
-
+        i = m - 1  # text index
+        j = m - 1  # substring index
+        while i < n:
+            if string[i] == substring[j]:
                 if j == 0:
-                    end = time.time()
-                    print("Время работы алгоритма Бойера-Мура_Хорспула: {}".
-                        format(end - start))
-                    return i - k + 1
+                    count += 1
+                    i += m
+                    j = m - 1
+                else:
+                    i -= 1
+                    j -= 1
+            else:
+                l = last(string[i])
+                i = i + m - min(j, 1 + l)
+                j = m - 1
 
-        else:
-            end = time.time()
-            print("Время работы алгоритма Бойера-Мура-Хорспула: {}".
-                  format(end - start))
-            return -1
+        end = time.time()
+        print("Время работы алгоритма Бойера-Мура-Хорспула: {}. "
+              "Количество вхождений: {}".format(end - start, count))
 
 
 if __name__ == '__main__':
 
-    with open("test.txt") as file:
+    with open("input.txt") as file:
         str = file.read()
-    substr = "test"
+    substr = "какая"
+    search = search_substrings()
+    search.KMP(str, substr)
+    search.BruthForce(str, substr)
+    search.RabbinKarp(str, substr)
+    search.BMH(str, substr)
