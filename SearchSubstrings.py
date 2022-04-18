@@ -1,5 +1,6 @@
 import time
 import Last_Occurrence
+from memory_profiler import profile
 
 
 class search_substrings:
@@ -137,9 +138,9 @@ if __name__ == '__main__':
 
     with open("input.txt") as file:
         str = file.read()
-    substr = "какая"
+    substr = "хороший вид"
     search = search_substrings()
+    search.RabbinKarp(str, substr)
     search.KMP(str, substr)
     search.BruthForce(str, substr)
-    search.RabbinKarp(str, substr)
     search.BMH(str, substr)
