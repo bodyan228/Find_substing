@@ -11,6 +11,8 @@ class search_substrings:
         len_substring = len(substring)
         hash_substring = hash(substring)
         count = 0
+        flag = False
+        first_index = -1
 
         for pos in range(len_string - len_substring + 1):
             hs = hash(string[pos: pos + len_substring])
@@ -19,42 +21,41 @@ class search_substrings:
 
                 if string[pos:pos + len_substring] == substring:
                     count += 1
-                    # end = time.time()
-                    # print("Время работы алгоритма Раббина-Карпа :{}".format(
-                    #     end - start))
-                    # return pos
-
+                    if not flag:
+                        first_index = pos
+                        flag = True
         end = time.time()
         print("Время работы алгоритма Раббина-Карпа: {}."
               "Количество вхождений: {}.".format(end - start, count))
+        return first_index
 
     def BruthForce(self, string, substring):#Поиск "грубой силой"
         start = time.time()
-        flag = 0
+        flag = False
         i = 0
         count = 0
+        first_index = -1
+        flag2 = False
 
         for pos in range(len(string)):
 
             if i == len(substring):
                 i = 0
                 count += 1
-                # return pos - i
+                if not flag2:
+                    first_index = pos - i - 1
+                    flag2 = True
 
             if string[pos] == substring[i]:
-                flag = 1
+                flag = True
                 i += 1
 
             else:
                 i = 0
-
-        # if flag == 1:
-        #     end = time.time()
-        #     print("Время работы алгоритма поиска 'грубой силой': {}".
-        #         format(end - start))
         end = time.time()
         print("Время работы алгоритма поиска 'грубой силой': {}."
               "Количество вхождений: {}.".format(end - start, count))
+        return first_index
 
     def find_prefix(self, substring):#Нахождение префикса для алгоритма Кнута-Морриса-Пратта
         p = [0]*len(substring)
@@ -82,7 +83,8 @@ class search_substrings:
         l = 0
         P = self.find_prefix(substring)
         count = 0
-        # first_ind = 0
+        first_ind = -1
+        flag = False
 
         while k < len(string):
             if substring[l] == string[k]:
@@ -92,10 +94,9 @@ class search_substrings:
                 if l == len(substring):
                     count += 1
                     l = 0
-                    # end = time.time()
-                    # print("Время работы алгоритма Кнутта-Морриса-Пратта: {}".
-                    #     format(end - start))
-                    # first_ind = k - len(substring)
+                    if not flag:
+                        first_ind = k - len(substring)
+                        flag = True
             elif l > 0:
                 l = P[l-1]
             else:
@@ -103,7 +104,7 @@ class search_substrings:
         end = time.time()
         print("Время работы алгоритма Кнутта-Морриса-Пратта:{}. "
               "Количество вхождений: {}".format(end - start, count))
-        return -1
+        return first_ind
 
     def BMH(self, string, substring):# Алогритм Бойера-Мура-Хорспула
         occurrence = Last_Occurrence
@@ -115,9 +116,14 @@ class search_substrings:
         n = len(string)
         i = m - 1  # text index
         j = m - 1  # substring index
+        flag = False
+        first_index = -1
         while i < n:
             if string[i] == substring[j]:
                 if j == 0:
+                    if not flag:
+                        first_index = i
+                        flag = True
                     count += 1
                     i += m
                     j = m - 1
@@ -132,13 +138,14 @@ class search_substrings:
         end = time.time()
         print("Время работы алгоритма Бойера-Мура-Хорспула: {}. "
               "Количество вхождений: {}".format(end - start, count))
+        return first_index
 
 
 if __name__ == '__main__':
 
     with open("input.txt") as file:
         str = file.read()
-    substr = "хороший вид"
+    substr = "k"
     search = search_substrings()
     search.RabbinKarp(str, substr)
     search.KMP(str, substr)

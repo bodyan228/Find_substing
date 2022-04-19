@@ -24,4 +24,4 @@ class TestSubstring(unittest.TestCase):
 
     def test_BMH(self):
         self.assertEqual(self.b_m_h("something here may write,"
-                                    " i don't understand", "a"), 2)
+                                    " i don't understand", "a"), 16)
