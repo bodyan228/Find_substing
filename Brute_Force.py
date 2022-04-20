@@ -6,18 +6,18 @@ def testing_Brute_Force(string, substring):  # Поиск "грубой сило
     i = 0
     count = 0
     first_index = -1
-    flag2 = False
+    flag = False
 
-    for pos in range(len(string)):
+    for pos, el in enumerate(string):
 
         if i == len(substring):
             i = 0
             count += 1
-            if not flag2:
+            if not flag:
                 first_index = pos - i - 1
-                flag2 = True
+                flag = True
 
-        if string[pos] == substring[i]:
+        if el == substring[i]:
             i += 1
 
         else:
