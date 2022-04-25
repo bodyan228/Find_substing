@@ -1,14 +1,14 @@
-from BMH import testingBMH
-from KMP import testingKMP, find_prefix
-from Brute_Force import testing_Brute_Force
-from Rabin_Karp import testing_al_RabinKarp
+from Algorithms.bmh import testingBMH
+from Algorithms.kmp import testingKMP, find_prefix
+from Algorithms.brute_force import testing_Brute_Force
+from Algorithms.rabin_karp import testing_rabin_carp
 import unittest
 
 
 class TestSubstring(unittest.TestCase):
 
     def setUp(self):
-        self.r_k = testing_al_RabinKarp
+        self.r_k = testing_rabin_carp
         self.b_f = testing_Brute_Force
         self.k_m_p = testingKMP
         self.b_m_h = testingBMH
