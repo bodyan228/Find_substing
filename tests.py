@@ -32,7 +32,3 @@ class TestSubstring(unittest.TestCase):
                                     " i don't understand", "a"), 16)
         self.assertEqual(self.b_m_h("something here may write,"
                                     " i don't understand", "["), -1)
-
-
-if __name__ == '__main__':
-    unittest.main()
