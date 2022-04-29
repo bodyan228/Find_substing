@@ -1,52 +1,49 @@
-import time
-import tracemalloc
+from init_class import Find
 
 
-def get_hash(some_string: str) -> int:
-    result = 0
+class RabinCarp(Find):
 
-    for pos, el in enumerate(some_string):
-        result = (17 * result + ord(el)) % 256
-    return result
-
-
-def testing_rabin_carp(original_string, pattern):
-    tracemalloc.start()
-    start = time.time()
-    str_length = len(original_string)
-    pattern_length = len(pattern)
-    degree = 1
-
-    for i in range(1, pattern_length):
-        degree = (degree * 17) % 256
-
-    substring_hash = get_hash(pattern)
-    string_hash = get_hash(original_string[:pattern_length])
-    count = 0
+    name = "Рабин-Карп"
+    original = ''
+    pattern = ''
     first_index = -1
-    flag = False
+    count = 0
 
-    for i in range(str_length - pattern_length + 1):
-        if string_hash == substring_hash \
-                and original_string[i:i + pattern_length] == pattern:
-            count += 1
-            if not flag:
-                first_index = i - pattern_length + 1
-                flag = True
-        if i < str_length - pattern_length:
-            string_hash = ((string_hash - ord(original_string[i]) * degree)
-                        * 17 + ord(original_string[i + pattern_length])) % 256
+    def __init__(self, original, pattern):
+        super().__init__(original, pattern)
 
-        if string_hash < 0:
-            string_hash += 256
-    end = time.time()
+    def get_hash(self, some_string: str) -> int:
+        result = 0
 
-    with open("out.txt", "a") as out:
-        out.write("Время работы алгоритма Раббина-Карпа: {}. \n"
-                  "Количество вхождений: {}. \n"
-                  "Максимальное количество выделяемой памяти: ""{} KB. \n\n"
-                  .format(end - start, count,
-                        tracemalloc.get_traced_memory()[1]/1024))
+        for pos, el in enumerate(some_string):
+            result = (17 * result + ord(el)) % 256
+        return result
 
-    tracemalloc.stop()
-    return first_index
+    def testing(self):
+        str_length = len(self.original)
+        pattern_length = len(self.pattern)
+        degree = 1
+
+        for i in range(1, pattern_length):
+            degree = (degree * 17) % 256
+
+        substring_hash = self.get_hash(self.pattern)
+        string_hash = self.get_hash(self.original[:pattern_length])
+        flag = False
+
+        for i in range(str_length - pattern_length + 1):
+            if string_hash == substring_hash \
+                    and self.original[i:i + pattern_length] == self.pattern:
+                self.count += 1
+                if not flag:
+                    self.first_index = i - pattern_length + 1
+                    flag = True
+            if i < str_length - pattern_length:
+                string_hash = ((string_hash - ord(self.original[i]) * degree)
+                               * 17 + ord(
+                            self.original[i + pattern_length])) % 256
+
+            if string_hash < 0:
+                string_hash += 256
+
+        return self.first_index, self.count

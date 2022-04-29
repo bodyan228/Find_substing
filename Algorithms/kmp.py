@@ -1,61 +1,53 @@
-import time
-import tracemalloc
+from init_class import Find
 
 
-def find_prefix(substring):
+class KMP(Find):
 
-    p = [0] * len(substring)
-    j = 0
-    i = 1
-    while i < len(substring):
-
-        if substring[i] == substring[j]:
-            p[i] = j + 1
-            i += 1
-            j += 1
-
-        elif j == 0:
-            p[i] = 0
-            i += 1
-
-        else:
-            j = p[j - 1]
-    return p
-
-
-def testingKMP(original_string, pattern):
-    tracemalloc.start()
-    start = time.time()
-    k = 0
-    pattern_index = 0
-    list_of_prefix = find_prefix(pattern)
+    name = "Кнут-Моррис-Пратт"
+    pattern = ''
+    original = ''
     count = 0
-    first_ind = -1
-    flag = False
+    first_index = -1
 
-    while k < len(original_string):
-        if pattern[pattern_index] == original_string[k]:
-            k += 1
-            pattern_index += 1
+    def __init__(self, original, pattern):
+        super().__init__(original, pattern)
 
-            if pattern_index == len(pattern):
-                count += 1
-                pattern_index = 0
-                if not flag:
-                    first_ind = k - 1
-                    flag = True
-        elif pattern_index > 0:
-            pattern_index = list_of_prefix[pattern_index - 1]
-        else:
-            k += 1
-    end = time.time()
+    def testing(self):
+        k = 0
+        pattern_index = 0
+        list_of_prefix = [0] * len(self.pattern)
+        j = 0
+        i = 1
+        while i < len(self.pattern):
 
-    with open("out.txt", "a") as out:
-        out.write("Время работы алгоритма Кнутта-Морриса-Пратта: {}. \n"
-                  "Количество вхождений: {}. \n"
-                  "Максимальное количество выделяемой памяти: {} KB. \n\n"
-                  .format(end - start, count,
-                        tracemalloc.get_traced_memory()[1]/1024))
-    tracemalloc.stop()
+            if self.pattern[i] == self.pattern[j]:
+                list_of_prefix[i] = j + 1
+                i += 1
+                j += 1
 
-    return first_ind
+            elif j == 0:
+                list_of_prefix[i] = 0
+                i += 1
+
+            else:
+                j = list_of_prefix[j - 1]
+
+        flag = False
+
+        while k < len(self.original):
+            if self.pattern[pattern_index] == self.original[k]:
+                k += 1
+                pattern_index += 1
+
+                if pattern_index == len(self.pattern):
+                    self.count += 1
+                    pattern_index = 0
+                    if not flag:
+                        self.first_index = k - 1
+                        flag = True
+            elif pattern_index > 0:
+                pattern_index = list_of_prefix[pattern_index - 1]
+            else:
+                k += 1
+
+        return self.first_index, self.count

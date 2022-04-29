@@ -1,37 +1,34 @@
-import time
-import tracemalloc
+from init_class import Find
 
 
-def testing_Brute_Force(original_string, pattern):
-    tracemalloc.start()
-    start = time.time()
-    i = 0
-    count = 0
+class Brute_Force(Find):
+
+    name = "'грубая сила'"
+    original = ''
+    pattern = ''
     first_index = -1
-    flag = False
+    count = 0
 
-    for pos, el in enumerate(original_string):
+    def __init__(self, original, pattern):
+        super().__init__(original, pattern)
 
-        if i == len(pattern):
-            i = 0
-            count += 1
-            if not flag:
-                first_index = pos - i - 1
-                flag = True
+    def testing(self):
+        i = 0
+        flag = False
 
-        if el == pattern[i]:
-            i += 1
+        for pos, el in enumerate(self.original):
 
-        else:
-            i = 0
-    end = time.time()
+            if i == len(self.pattern):
+                i = 0
+                self.count += 1
+                if not flag:
+                    self.first_index = pos - i - 1
+                    flag = True
 
-    with open("out.txt", "w") as out:
-        out.write("Время работы алгоритма поиска 'грубой силой': {}. \n"
-                  "Количество вхождений: {}. \n"
-                  "Максимальное количество выделяемой памяти: {} KB. \n\n"
-                  .format(end - start, count,
-                        tracemalloc.get_traced_memory()[1]/1024))
-    tracemalloc.stop()
+            if el == self.pattern[i]:
+                i += 1
 
-    return first_index
+            else:
+                i = 0
+
+        return self.first_index, self.count
