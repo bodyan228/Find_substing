@@ -11,8 +11,8 @@ if __name__ == '__main__':
     parser.add_argument("pattern", help="Введите подстроку")
     args = parser.parse_args()
 
-    if args.original == "input.log":
-        with open("input.log") as file:
+    if args.original == "input.txt":
+        with open("input.txt") as file:
             args.original = file.read()
 
     toaster.Statistics(Brute_Force(args.original, args.pattern))\
