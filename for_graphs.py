@@ -18,25 +18,26 @@ def get_data():
         original = file.read()
 
     for i in range(10):
-        res = toaster.Statistics(Brute_Force(original, "просто"))\
+        res = toaster.Statistics(
+            Brute_Force(original, "необычный случай был"))\
             .collecting_statistics()
         res_brute_time.append(res[0])
         res_brute_mem.append(res[1])
         original.join("a")
     for i in range(10):
-        res = toaster.Statistics(RabinCarp(original, "a"))\
+        res = toaster.Statistics(RabinCarp(original, "необычный случай был"))\
             .collecting_statistics()
         res_rk_time.append(res[0])
         res_rk_mem.append(res[1])
         original.join("a")
     for i in range(10):
-        res = toaster.Statistics(KMP(original, "a"))\
+        res = toaster.Statistics(KMP(original, "необычный случай был"))\
             .collecting_statistics()
         res_kmp_time.append(res[0])
         res_kmp_mem.append(res[1])
         original.join("a")
     for i in range(10):
-        res = toaster.Statistics(BMH(original, "a"))\
+        res = toaster.Statistics(BMH(original, "необычный случай был"))\
             .collecting_statistics()
         res_bmh_time.append(res[0])
         res_bmh_mem.append(res[1])
